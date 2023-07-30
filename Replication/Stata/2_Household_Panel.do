@@ -28,7 +28,7 @@
 
 clear all
 
-use "$data\2017_H", clear
+use "${DATA}/FAM2017ER", clear
 
 * Rename used variables
 ren ER66002 id
@@ -458,7 +458,7 @@ rent* divi* interest* trust* bus*
 
 gen year=2017
 
-save "$temp\HH_2017.dta", replace
+save "${TEMP}/HH_2017.dta", replace
 
 
 ********************************************************************************************
@@ -466,7 +466,7 @@ save "$temp\HH_2017.dta", replace
 ********************************************************************************************
 clear all
 
-use "$data\2015_H", clear
+use "${DATA}/FAM2015ER", clear
 
 * Rename used variables
 ren ER60002 id
@@ -863,14 +863,14 @@ rent* divi* interest* trust* bus*
 
 gen year=2015
 
-save "$temp\HH_2015.dta", replace
+save "${TEMP}/HH_2015.dta", replace
 
 
 ********************************************************************************************
 * 2013
 ********************************************************************************************
 
-use "$data\2013_H", clear
+use "${DATA}/FAM2013ER", clear
 
 ren ER53002 id
 ren ER53016 fsize
@@ -1265,13 +1265,13 @@ rent* divi* interest* trust* bus*
 
 gen year=2013
 
-save "$temp\HH_2013.dta", replace
+save "${TEMP}/HH_2013.dta", replace
 
 ********************************************************************************************
 * 2011
 ********************************************************************************************
 
-use "$data\2011_H", clear
+use "${DATA}/FAM2011ER", clear
 
 ren ER47302 id
 ren ER47316 fsize
@@ -1666,13 +1666,13 @@ rent* divi* interest* trust* bus*
 
 gen year=2011
 
-save "$temp\HH_2011.dta", replace
+save "${TEMP}/HH_2011.dta", replace
 
 ********************************************************************************************
 * 2009
 ********************************************************************************************
 
-use "$data\2009_H", clear
+use "${DATA}/FAM2009ER", clear
 
 ren ER42002 id
 ren ER42016 fsize
@@ -2050,17 +2050,17 @@ rent* divi* interest* trust* bus*
 
 gen year=2009
 
-save "$temp\HH_2009.dta", replace
+save "${TEMP}/HH_2009.dta", replace
 
 ********************************************************************************************
 * 2007
 ********************************************************************************************
 
-use "$data\2007_H", clear
+use "${DATA}/FAM2007ER", clear
 
 * Merge with the supplementary wealth file
 ren ER36002 S801
-merge 1:1 S801 using "$data\2007_W.dta"
+merge 1:1 S801 using "${DATA}/WLTH2007.dta"
 
 ren S801 id // Corrseponds to wealth file identifier
 ren ER36016 fsize
@@ -2442,18 +2442,18 @@ rent* divi* interest* trust* bus*
 
 gen year=2007
 
-save "$temp\HH_2007.dta", replace
+save "${TEMP}/HH_2007.dta", replace
 
 
 ********************************************************************************************
 * 2005
 ********************************************************************************************
 
-use "$data\2005_H", clear
+use "${DATA}/FAM2005ER", clear
 
 * Merge with the supplementary wealth file
 ren ER25002 S701
-merge 1:1 S701 using "$data\2005_W.dta"
+merge 1:1 S701 using "${DATA}/WLTH2005.dta"
 
 ren S701 id // Corrseponds to wealth file identifier
 ren ER25016 fsize
@@ -2835,18 +2835,18 @@ rent* divi* interest* trust* bus*
 
 gen year=2005
 
-save "$temp\HH_2005.dta", replace
+save "${TEMP}/HH_2005.dta", replace
 
 
 ********************************************************************************************
 * 2003
 ********************************************************************************************
 
-use "$data\2003_H", clear
+use "${DATA}/FAM2003ER", clear
 
 * Merge with the supplementary wealth file
 ren ER21002 S601
-merge 1:1 S601 using "$data\2003_W.dta"
+merge 1:1 S601 using "${DATA}/WLTH2003.dta"
 
 ren S601 id // Corrseponds to wealth file identifier
 ren ER21016 fsize
@@ -3287,18 +3287,18 @@ exp_job_years exp_job_months exp_job_weeks unempl layoff
 
 gen year=2003
 
-save "$temp\HH_2003.dta", replace
+save "${TEMP}/HH_2003.dta", replace
 
 
 ********************************************************************************************
 * 2001
 ********************************************************************************************
 
-use "$data\2001_H", clear
+use "${DATA}/FAM2001ER", clear
 
 * Merge with the supplementary wealth file
 ren ER17002 S501
-merge 1:1 S501 using "$data\2001_W.dta"
+merge 1:1 S501 using "${DATA}/WLTH2001.dta"
 
 ren S501 id // Corrseponds to wealth file identifier
 ren ER17012 fsize
@@ -3731,17 +3731,17 @@ exp_job_years exp_job_months exp_job_weeks unempl
 
 gen year=2001
 
-save "$temp\HH_2001.dta", replace
+save "${TEMP}/HH_2001.dta", replace
 
 ********************************************************************************************
 * 1999
 ********************************************************************************************
 
-use "$data\1999_H", clear
+use "${DATA}/FAM1999ER", clear
 
 * Merge with the supplementary wealth file
 ren ER13002 S401
-merge 1:1 S401 using "$data\1999_W.dta"
+merge 1:1 S401 using "${DATA}/WLTH1999.dta"
 
 ren S401 id // Corrseponds to wealth file identifier
 ren ER13009 fsize
@@ -4155,21 +4155,18 @@ exp_job_years exp_job_months exp_job_weeks unempl
 
 gen year=1999
 
-save "$temp\HH_1999.dta", replace
+save "${TEMP}/HH_1999.dta", replace
 
 
 /// Collate it all
 
-use "$temp\HH_1999", clear
+use "${TEMP}/HH_1999", clear
 
-forvalues i = 2001(2)2017{
-append using "$temp\HH_`i'.dta"
-
+forvalues i = 2001(2)2017 {
+    append using "${TEMP}/HH_`i'.dta"
 }
-save "$temp\HH_Panel.dta", replace
+save "${TEMP}/HH_Panel.dta", replace
 
-forvalues i = 1997(2)2017{
-erase "$temp\HH_`i'.dta"
+forvalues i = 1999(2)2017 {
+    erase "${TEMP}/HH_`i'.dta"
 }
-
-cd "$do"

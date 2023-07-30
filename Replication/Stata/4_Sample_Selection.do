@@ -13,8 +13,9 @@
 * 
 ********************************************************************************************
 
-cd "$do"
-u "$temp\Full_Panel_1.dta",clear
+cd "${TEMP}""
+
+use "${TEMP}/Full_Panel_1.dta",clear
 
 ********************************************************************************************
 * 1. Construct Panel with Complete Information, Recode Variables
@@ -55,8 +56,8 @@ replace sample_selectA=0 if sex==2
 * Recode employment status
 gen empst=.
 gen tempempst =.
-forvalues y=1(1)7{
-replace tempempst=`y' if empst1==`y' | empst2==`y' | empst3==`y'
+forvalues y=1(1)7 {
+	replace tempempst=`y' if empst1==`y' | empst2==`y' | empst3==`y'
 }
 replace tempempst=. if empst1==.
 replace tempempst = empst if year <1993
@@ -274,12 +275,12 @@ replace house=. if house == 9999999
 ********************************************************************************************
 gen coh=.
 forvalues i = 1930(10)2000{
-replace coh=(`i'-1920)/10 if yb>=`i' & yb<`i'+10
+	replace coh=(`i'-1920)/10 if yb>=`i' & yb<`i'+10
 }
 
 gen cohw=.
 forvalues i = 1930(10)2000{
-replace cohw=(`i'-1920)/10 if ybw>=`i' & ybw<`i'+10
+	replace cohw=(`i'-1920)/10 if ybw>=`i' & ybw<`i'+10
 }
 
 ********************************************************************************************
@@ -361,14 +362,14 @@ replace mortgage = 0  /* Could add mortgage interest and medical deductibles */
 keep taxsimid year state mstat page sage depx pwages swages dividends intrec stcg ltcg otherprop nonprop pensions gssi ui transfers rentpaid proptax childcare mortgage
 order taxsimid year state mstat page sage depx pwages swages dividends intrec stcg ltcg otherprop nonprop pensions gssi ui transfers rentpaid proptax childcare mortgage 
 
-taxsim27 
+// taxsim27 no longer seems to work
+taxsim32
 
 * Output to directory
-save "$TAXSIM\TAXSIM_main.dta", replace
+save "${TAXSIM}/TAXSIM_main.dta", replace
 restore
 
 
-save "$temp\Full_Panel_2b.dta", replace
+save "${TEMP}/Full_Panel_2b.dta", replace
 
-cd "$programs"
-
+cd ${PROGRAMS}

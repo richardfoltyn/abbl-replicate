@@ -10,10 +10,8 @@
 
 clear all
 
-cd "$output"
-
 * Load the individual file
-u "$data\2019_FAMILY_ID.dta", clear
+use "${DATA}/PID19.dta", clear
 
 keep PID2 PID3 PID23 PID24 
 
@@ -23,6 +21,5 @@ gen persid_father = (PID23*1000) + PID24
 
 keep persid persid_father
 
-save "$temp\parent_id_links.dta", replace
+save "${TEMP}/parent_id_links.dta", replace
 
-cd "$programs"

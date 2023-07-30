@@ -20,10 +20,8 @@
 
 clear all
 
-cd "$output"
-
 * Load the individual file
-u "$data\2017IND.dta", clear
+use "${DATA}/IND2019ER.dta", clear
 
 #delimit;
 keep  	ER30001	ER30002 /* 1968 Family ID and Sequence # which can be used for unique id */
@@ -134,9 +132,9 @@ label var person "UNIQUE PERSON IDENTIFER (HH HEADS ONLY)"
 compress
 
 
-save "$temp\I_Panel.dta", replace
+save "${TEMP}/I_Panel.dta", replace
 
-merge 1:1 id year using "$temp\HH_Panel.dta"
+merge 1:1 id year using "${TEMP}/HH_Panel.dta"
 drop if _merge!=3
 drop _merge
 
@@ -144,6 +142,5 @@ by person, sort: gen numwav=_N
 
 sort numwav person year 
 
-save "$temp\Full_Panel_1.dta", replace
+save "${TEMP}/Full_Panel_1.dta", replace
 
-cd "$programs"

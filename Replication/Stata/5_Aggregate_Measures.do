@@ -19,7 +19,6 @@
 
 
 clear all
-cd "$temp"
 
 /*  1 = Assigning missing for observations with wage lower then 1/2 state ****/
 global min_wage     = 1
@@ -32,7 +31,7 @@ global pec_drop     = 0.25  /* Drop observation in the bottom "pec_drop" percent
 * 1. Load TAXSIM and Price Indicies
 ********************************************************************************************
 
-u Full_Panel_2b.dta,clear
+use "${TEMP}/Full_Panel_2b.dta", clear
 
 drop if sample_select==0
 
@@ -43,18 +42,18 @@ sort person year
 keep if age >=25 & age <= 60
 
 * Merge with spouse links
-merge m:1 id year using "$temp\spouse_links.dta"
+merge m:1 id year using "${TEMP}/spouse_links.dta"
 ren _merge spouse_link
 
 
 * Merge with parental links
 gen persid_store = persid /* Store for later use */
-merge m:1 persid using "$temp\parent_id_links.dta"
+merge m:1 persid using "${TEMP}/parent_id_links.dta"
 ren _merge merge_parent_link
 ren persid_father persid_father_of_head
 drop persid
 rename spouse_persid persid
-merge m:1 persid using "$temp\parent_id_links.dta"
+merge m:1 persid using "${TEMP}/parent_id_links.dta"
 ren _merge merge_parent_link2
 ren persid_father persid_father_of_spouse
 drop persid
@@ -69,19 +68,19 @@ gen persid = persid_store
 
 
 * Merge with price index
-merge m:1 year using "$data\CPI.dta"
+merge m:1 year using "${DATA}/CPI.dta"
 keep if _merge == 3 // even years from the using need to be dropped 
 drop _merge
 
 * Merge with TAXSIM estimates
-merge m:1 taxsimid using "$TAXSIM\TAXSIM_main.dta"
+merge m:1 taxsimid using "${TAXSIM}/TAXSIM_main.dta"
 keep if _merge == 3 // even years from the using need to be dropped 
 drop _merge
 gen taxes_all = fiitax + siitax + fica/2
 drop fiitax siitax fica frate srate ficar
 
 * Merge with minimum wages
-merge m:1 state year using "$data\minwage.dta"
+merge m:1 state year using "${DATA}/minwage.dta"
 keep if _merge == 3 // even years from the using need to be dropped 
 drop _merge
 drop min_fed_mw min_mw max_fed_mw max_mw
@@ -150,7 +149,7 @@ gen equivalence = 1 + (fsize-kids-1)*0.7 + 0.5*kids
 replace fstmp =0 if fstmp ==.
 gen m_non_durable=0
 foreach var in food_home food_out food_deliv gasoline clothing{
-replace m_non_durable = 1 if `var' ==.
+  replace m_non_durable = 1 if `var' ==.
 }
 egen non_durable = rsum(clothing food_home food_out food_deliv gasoline), missing
 egen all_food = rsum(food_home food_out food_deliv), missing
@@ -158,14 +157,14 @@ egen non_durable_excl_food = rsum(clothing gasoline), missing
 
 gen m_housing=0
 foreach var in mortgage rent prop_tax homeinsure{
-replace m_housing = 1 if `var' ==.
+  replace m_housing = 1 if `var' ==.
 }
 egen housing = rsum(mortgage rent prop_tax homeinsure), missing
 
 
 gen m_durable=0
 foreach var in /*home_repair home_furnish*/ auto_repair vehicle_loan vehicle_down vehicle_lease other_vehicle{
-replace m_durable = 1 if `var' ==.
+  replace m_durable = 1 if `var' ==.
 }
 egen durable = rsum(/*home_repair home_furnish*/ auto_repair vehicle_loan vehicle_down vehicle_lease other_vehicle), missing
 
@@ -258,7 +257,6 @@ gen extra=(tyoth)>0           // dummy for income recipient other than h/w
 
 
 
-save "Full_Panel_3b.dta", replace
- 
-cd "$programs"
+save "${TEMP}/Full_Panel_3b.dta", replace
+
 
